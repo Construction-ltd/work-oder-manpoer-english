@@ -67,7 +67,7 @@
 <body>
 
     <div class="no-print-area">
-        <h2 style="margin-top:0; color:var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px;">Work Order Control Panel</h2>
+        <h2 style="margin-top:0; color:var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px;">Work Order Control Panel (Monthly)</h2>
         
         <div class="grid">
             <div class="input-group">
@@ -92,8 +92,8 @@
                 <input type="text" id="order_no" placeholder="#001" oninput="updatePreview()">
             </div>
             <div class="input-group">
-                <label>6. Work Site Address</label>
-                <input type="text" id="work_site" placeholder="Site location" oninput="updatePreview()">
+                <label>6. Monthly Duty Days</label>
+                <input type="number" id="duty_days" value="26" oninput="updatePreview()">
             </div>
             <div class="input-group">
                 <label>7. Type of Work</label>
@@ -101,25 +101,25 @@
             </div>
 
             <div class="input-group">
-                <label>8. Foreman Wage (Daily)</label>
-                <input type="number" id="wage_f" placeholder="1200" oninput="updatePreview()">
+                <label>8. Foreman Monthly Salary</label>
+                <input type="number" id="wage_f" placeholder="Enter Monthly Amount" oninput="updatePreview()">
             </div>
             <div class="input-group">
-                <label>9. Mason Wage (Daily)</label>
-                <input type="number" id="wage_m" placeholder="900" oninput="updatePreview()">
+                <label>9. Mason Monthly Salary</label>
+                <input type="number" id="wage_m" placeholder="Enter Monthly Amount" oninput="updatePreview()">
             </div>
             <div class="input-group">
-                <label>10. Helper Wage (Daily)</label>
-                <input type="number" id="wage_h" placeholder="700" oninput="updatePreview()">
+                <label>10. Helper Monthly Salary</label>
+                <input type="number" id="wage_h" placeholder="Enter Monthly Amount" oninput="updatePreview()">
             </div>
 
             <div class="input-group full-width">
-                <label>11. Payment Terms (New line for each point)</label>
+                <label>11. Payment Terms</label>
                 <textarea id="payment_sys" rows="3" placeholder="Enter payment conditions..." oninput="updatePreview()"></textarea>
             </div>
 
             <div class="input-group full-width">
-                <label>12. General Terms & Conditions (New line for each point)</label>
+                <label>12. General Terms & Conditions</label>
                 <textarea id="terms" rows="4" placeholder="Enter other terms..." oninput="updatePreview()"></textarea>
             </div>
         </div>
@@ -153,26 +153,27 @@
         <div class="section">
             <div class="section-title">1. WORK LOCATION & DESCRIPTION</div>
             <div class="content-box">
-                <p><strong>Site Address:</strong> <span id="view_work_site">N/A</span></p>
+                <p><strong>Salary Cycle:</strong> Monthly Basis (<span id="view_duty_days">26</span> Days/Month)</p>
                 <p><strong>Work Nature:</strong> <span id="view_work_type">N/A</span></p>
             </div>
         </div>
 
         <div class="section">
-            <div class="section-title">2. LABOR WAGE SCHEDULE</div>
+            <div class="section-title">2. LABOR WAGE SCHEDULE (MONTHLY)</div>
             <div class="content-box">
                 <table>
                     <thead>
                         <tr>
                             <th>Designation</th>
-                            <th>Daily Wage (8 Hours)</th>
-                            <th>Overtime (Per Hour)</th>
+                            <th>Monthly Basic</th>
+                            <th>Duty Days</th>
+                            <th>OT (Per Hour)</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Foreman</td><td>Tk. <span id="v_f">0</span></td><td>Tk. <span id="o_f">0</span></td></tr>
-                        <tr><td>Skilled Mason</td><td>Tk. <span id="v_m">0</span></td><td>Tk. <span id="o_m">0</span></td></tr>
-                        <tr><td>Helper / Labor</td><td>Tk. <span id="v_h">0</span></td><td>Tk. <span id="o_h">0</span></td></tr>
+                        <tr><td>Foreman</td><td>Tk. <span id="v_f">0</span></td><td><span id="d_f">26</span></td><td>Tk. <span id="o_f">0</span></td></tr>
+                        <tr><td>Skilled Mason</td><td>Tk. <span id="v_m">0</span></td><td><span id="d_m">26</span></td><td>Tk. <span id="o_m">0</span></td></tr>
+                        <tr><td>Helper / Labor</td><td>Tk. <span id="v_h">0</span></td><td><span id="d_h">26</span></td><td>Tk. <span id="o_h">0</span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -210,7 +211,6 @@
 
     <script>
         function updatePreview() {
-            // Client Data Update
             const cName = document.getElementById('c_name').value || "Client Name";
             document.getElementById('view_c_name').innerText = cName;
             document.getElementById('view_sig_client').innerText = cName;
@@ -219,12 +219,12 @@
             document.getElementById('view_c_license').innerText = document.getElementById('c_license').value || "N/A";
             document.getElementById('view_c_addr').innerText = document.getElementById('c_addr').value || "N/A";
             
-            // Work Info Update
             document.getElementById('view_order_no').innerText = document.getElementById('order_no').value || "#000";
-            document.getElementById('view_work_site').innerText = document.getElementById('work_site').value || "N/A";
+            const dDays = document.getElementById('duty_days').value || 26;
+            document.getElementById('view_duty_days').innerText = dDays;
             document.getElementById('view_work_type').innerText = document.getElementById('work_type').value || "N/A";
 
-            // Wage & Overtime Update
+            // Wage & Overtime Update (Monthly System)
             const f = parseFloat(document.getElementById('wage_f').value) || 0;
             const m = parseFloat(document.getElementById('wage_m').value) || 0;
             const h = parseFloat(document.getElementById('wage_h').value) || 0;
@@ -232,25 +232,27 @@
             document.getElementById('v_f').innerText = f.toLocaleString();
             document.getElementById('v_m').innerText = m.toLocaleString();
             document.getElementById('v_h').innerText = h.toLocaleString();
-            
-            document.getElementById('o_f').innerText = (f / 8).toFixed(2);
-            document.getElementById('o_m').innerText = (m / 8).toFixed(2);
-            document.getElementById('o_h').innerText = (h / 8).toFixed(2);
 
-            // Payment List
+            document.getElementById('d_f').innerText = dDays;
+            document.getElementById('d_m').innerText = dDays;
+            document.getElementById('d_h').innerText = dDays;
+            
+            // Formula: (Monthly Salary / Days) / 8 hours
+            document.getElementById('o_f').innerText = ((f / dDays) / 8).toFixed(2);
+            document.getElementById('o_m').innerText = ((m / dDays) / 8).toFixed(2);
+            document.getElementById('o_h').innerText = ((h / dDays) / 8).toFixed(2);
+
             const payLines = document.getElementById('payment_sys').value.split('\n');
             let payHtml = '';
             payLines.forEach(line => { if(line.trim() !== "") payHtml += `<p style="margin: 3px 0;">• ${line}</p>`; });
             document.getElementById('view_payment_list').innerHTML = payHtml || "No payment terms defined.";
 
-            // Terms List
             const termLines = document.getElementById('terms').value.split('\n');
             let termHtml = '';
             termLines.forEach(line => { if(line.trim() !== "") termHtml += `<li style="margin-bottom: 5px;">${line}</li>`; });
             document.getElementById('view_terms_list').innerHTML = termHtml || "No general terms defined.";
         }
 
-        // Initialize empty preview
         window.onload = updatePreview;
     </script>
 </body>
